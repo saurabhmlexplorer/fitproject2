@@ -136,9 +136,9 @@ elif screen == "📊 Analysis & Recommendations":
         boolean_heart_rate = (exercise_df["Heart_Rate"] < input_data["Heart_Rate"].values[0]).tolist()
 
         st.write(f"You are older than **{round((sum(boolean_age) / len(boolean_age)) * 100, 2)}%** of other users.")
-        st.write(f"Your exercise duration is higher than **{round(sum(boolean_duration) / len(boolean_duration)) * 100, 2)}%** of users.")
-        st.write(f"Your heart rate is higher than **{round(sum(boolean_heart_rate) / len(boolean_heart_rate)) * 100, 2)}%** of users.")
-        st.write(f"Your body temperature is higher than **{round(sum(boolean_body_temp) / len(boolean_body_temp)) * 100, 2)}%** of users.")
+        st.write(f"Your exercise duration is higher than **{round((sum(boolean_duration) / len(boolean_duration)) * 100, 2)}%** of users.")
+        st.write(f"Your heart rate is higher than **{round((sum(boolean_heart_rate) / len(boolean_heart_rate)) * 100, 2)}%** of users.")
+        st.write(f"Your body temperature is higher than **{round((sum(boolean_body_temp) / len(boolean_body_temp)) * 100, 2)}%** of users.")
 
         st.write("---")
         st.write("### 💡 Personalized Recommendations:")
