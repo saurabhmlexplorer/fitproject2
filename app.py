@@ -117,7 +117,7 @@ elif screen == "📊 Analysis & Recommendations":
 
     # Find similar results
     if "prediction" not in st.session_state or "user_data" not in st.session_state:
-    st.warning("⚠️ Please make a prediction first in the User Input screen!")
+        st.warning("⚠️ Please make a prediction first in the User Input screen!")
 else:
     st.title("Analysis & Personalized Recommendations 📈")
 
