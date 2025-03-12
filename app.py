@@ -131,11 +131,8 @@ elif screen == "📊 Analysis & Recommendations":
         similar_data_display["Gender"] = similar_data_display["Gender_male"].apply(lambda x: "Male" if x == 1 else "Female")
         similar_data_display.drop(columns=["Gender_male"], inplace=True)  # Remove the encoded column
         
-        st.write("### 🔍 Similar Past Exercise Records:")
-        st.write(similar_data_display.sample(5))
-
         st.write("### 🔍 Similar Exercise Records:")
-        st.write(similar_data.sample(5))
+        st.write(similar_data_display.sample(5))
 
         st.write("---")
         st.write("### 📊 General Information:")
