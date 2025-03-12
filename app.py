@@ -100,66 +100,79 @@ elif screen == "📝 User Input & Prediction":
 
     # Make Prediction
     if st.button("Predict Calories Burned 🔥"):
-        with st.spinner("Calculating..."):
-            time.sleep(2)  # Simulate loading time
-            prediction = random_reg.predict(input_data)
-            st.success(f"🔥 You will burn **{round(prediction[0], 2)} kilocalories** during this exercise!")
+    with st.spinner("Calculating..."):
+        time.sleep(2)  # Simulate loading time
+        prediction = random_reg.predict(input_data)
+        
+        # Store prediction and user data in session state
+        st.session_state["prediction"] = prediction[0]
+        st.session_state["user_data"] = input_data
+
+        st.success(f"🔥 You will burn **{round(prediction[0], 2)} kilocalories** during this exercise!")
+
 
 # **Screen 3: Analysis & Recommendations**
 elif screen == "📊 Analysis & Recommendations":
     st.title("Analysis & Personalized Recommendations 📈")
 
     # Find similar results
-    if 'prediction' in locals():  # Ensure prediction exists
-        calorie_range = [prediction[0] - 10, prediction[0] + 10]
-        similar_data = exercise_df[
-            (exercise_df["Calories"] >= calorie_range[0]) & (exercise_df["Calories"] <= calorie_range[1])
-        ]
-        
-        st.write("### 🔍 Similar Past Exercise Records:")
-        st.write(similar_data.sample(5))
+    if "prediction" not in st.session_state or "user_data" not in st.session_state:
+    st.warning("⚠️ Please make a prediction first in the User Input screen!")
+else:
+    st.title("Analysis & Personalized Recommendations 📈")
 
-        st.write("---")
-        st.write("### 📊 General Information:")
+    predicted_calories = st.session_state["prediction"]
+    input_data = st.session_state["user_data"]
 
-        boolean_age = (exercise_df["Age"] < input_data["Age"].values[0]).tolist()
-        boolean_duration = (exercise_df["Duration"] < input_data["Duration"].values[0]).tolist()
-        boolean_body_temp = (exercise_df["Body_Temp"] < input_data["Body_Temp"].values[0]).tolist()
-        boolean_heart_rate = (exercise_df["Heart_Rate"] < input_data["Heart_Rate"].values[0]).tolist()
+    st.write(f"### 🔥 Your predicted calories burned: **{round(predicted_calories, 2)} kcal**")
 
-        st.write(f"You are older than **{round(sum(boolean_age) / len(boolean_age), 2) * 100}%** of other users.")
-        st.write(f"Your exercise duration is higher than **{round(sum(boolean_duration) / len(boolean_duration), 2) * 100}%** of users.")
-        st.write(f"Your heart rate is higher than **{round(sum(boolean_heart_rate) / len(boolean_heart_rate), 2) * 100}%** of users.")
-        st.write(f"Your body temperature is higher than **{round(sum(boolean_body_temp) / len(boolean_body_temp), 2) * 100}%** of users.")
+    # Find similar past exercise records
+    calorie_range = [predicted_calories - 10, predicted_calories + 10]
+    similar_data = exercise_df[
+        (exercise_df["Calories"] >= calorie_range[0]) & (exercise_df["Calories"] <= calorie_range[1])
+    ]
 
-        st.write("---")
-        st.write("### 💡 Personalized Recommendations:")
+    st.write("### 🔍 Similar Past Exercise Records:")
+    st.write(similar_data.sample(5))
 
-        recommendations = []
+    st.write("---")
+    st.write("### 📊 General Information:")
 
-        # BMI Analysis
-        if input_data["BMI"].values[0] < 18.5:
-            recommendations.append("🔹 Your BMI is low. Consider adding more protein and calorie-dense foods.")
-        elif input_data["BMI"].values[0] > 25:
-            recommendations.append("⚠️ Your BMI is high. Try incorporating more cardio and a balanced diet.")
+    # Boolean analysis
+    boolean_age = (exercise_df["Age"] < input_data["Age"].values[0]).tolist()
+    boolean_duration = (exercise_df["Duration"] < input_data["Duration"].values[0]).tolist()
+    boolean_body_temp = (exercise_df["Body_Temp"] < input_data["Body_Temp"].values[0]).tolist()
+    boolean_heart_rate = (exercise_df["Heart_Rate"] < input_data["Heart_Rate"].values[0]).tolist()
 
-        # Heart Rate
-        if input_data["Heart_Rate"].values[0] > 100:
-            recommendations.append("🔴 Your heart rate is high. Reduce exercise intensity or consult a doctor.")
-        elif input_data["Heart_Rate"].values[0] < 70:
-            recommendations.append("🟢 Your heart rate is lower than normal. Increase workout intensity.")
+    st.write(f"You are older than **{round(sum(boolean_age) / len(boolean_age), 2) * 100}%** of other users.")
+    st.write(f"Your exercise duration is higher than **{round(sum(boolean_duration) / len(boolean_duration), 2) * 100}%** of users.")
+    st.write(f"Your heart rate is higher than **{round(sum(boolean_heart_rate) / len(boolean_heart_rate), 2) * 100}%** of users.")
+    st.write(f"Your body temperature is higher than **{round(sum(boolean_body_temp) / len(boolean_body_temp), 2) * 100}%** of users.")
 
-        # Exercise Duration
-        if input_data["Duration"].values[0] < 10:
-            recommendations.append("🟠 Increase workout duration to at least 30 minutes per session.")
+    st.write("---")
+    st.write("### 💡 Personalized Recommendations:")
 
-        # Body Temperature
-        if input_data["Body_Temp"].values[0] > 39:
-            recommendations.append("⚠️ High body temperature detected. Stay hydrated and avoid overheating.")
+    recommendations = []
 
-        for rec in recommendations:
-            st.write(rec)
+    # BMI Analysis
+    if input_data["BMI"].values[0] < 18.5:
+        recommendations.append("🔹 Your BMI is low. Consider adding more protein and calorie-dense foods.")
+    elif input_data["BMI"].values[0] > 25:
+        recommendations.append("⚠️ Your BMI is high. Try incorporating more cardio and a balanced diet.")
 
-    else:
-        st.write("⚠️ **Please make a prediction first in the User Input screen!**")
+    # Heart Rate
+    if input_data["Heart_Rate"].values[0] > 100:
+        recommendations.append("🔴 Your heart rate is high. Reduce exercise intensity or consult a doctor.")
+    elif input_data["Heart_Rate"].values[0] < 70:
+        recommendations.append("🟢 Your heart rate is lower than normal. Increase workout intensity.")
 
+    # Exercise Duration
+    if input_data["Duration"].values[0] < 10:
+        recommendations.append("🟠 Increase workout duration to at least 30 minutes per session.")
+
+    # Body Temperature
+    if input_data["Body_Temp"].values[0] > 39:
+        recommendations.append("⚠️ High body temperature detected. Stay hydrated and avoid overheating.")
+
+    for rec in recommendations:
+        st.write(rec)
