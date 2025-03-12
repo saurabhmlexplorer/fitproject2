@@ -60,7 +60,7 @@ if screen == "🏠 Welcome":
     st.title("Welcome to the Personal Fitness Tracker! 🏋️‍♂️")
     st.write("This application predicts the **calories burned** based on your exercise details.")
     st.write("Navigate to 'User Input & Prediction' to enter your details and get a prediction.")
-    st.image("fitness.jpg", use_column_width=True)  # Replace with a relevant image
+    st.image("your_image_path.jpg", use_container_width=True) # Replace with a relevant image
 
 # **Screen 2: User Input & Prediction**
 elif screen == "📝 User Input & Prediction":
