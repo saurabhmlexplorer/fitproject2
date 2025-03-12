@@ -120,13 +120,22 @@ elif screen == "📊 Analysis & Recommendations":
 
         
         
-        # Convert 'Gender_male' back to categorical values
-        similar_data_display = similar_data.copy()
-        similar_data_display["Gender"] = similar_data_display["Gender_male"].apply(lambda x: "Male" if x == 1 else "Female")
-        similar_data_display.drop(columns=["Gender_male"], inplace=True)  # Remove the encoded column
+        # Find similar results based on predicted calories
+        calorie_range = [prediction[0] - 10, prediction[0] + 10]  # Fix: Use prediction[0]
+        similar_data = exercise_df[
+            (exercise_df["Calories"] >= calorie_range[0]) & (exercise_df["Calories"] <= calorie_range[1])
+        ]
         
-        st.write("### 🔍 Similar Past Exercise Records:")
-        st.write(similar_data_display.sample(5))
+        if not similar_data.empty:
+            # Convert 'Gender_male' back to "Male" or "Female"
+            similar_data_display = similar_data.copy()
+            similar_data_display["Gender"] = similar_data_display["Gender_male"].apply(lambda x: "Male" if x == 1 else "Female")
+            similar_data_display.drop(columns=["Gender_male"], inplace=True)  # Remove one-hot column
+        
+            st.write("### 🔍 Similar Exercise Records:")
+            st.write(similar_data_display.sample(min(5, len(similar_data_display))))  # Display up to 5 samples safely
+        else:
+            st.write("⚠️ No similar exercise records found in the dataset.")
 
 
         st.write("---")
