@@ -100,15 +100,15 @@ elif screen == "📝 User Input & Prediction":
 
     # Make Prediction
     if st.button("Predict Calories Burned 🔥"):
-    with st.spinner("Calculating..."):
-        time.sleep(2)  # Simulate loading time
-        prediction = random_reg.predict(input_data)
-        
-        # Store prediction and user data in session state
-        st.session_state["prediction"] = prediction[0]
-        st.session_state["user_data"] = input_data
-
-        st.success(f"🔥 You will burn **{round(prediction[0], 2)} kilocalories** during this exercise!")
+        with st.spinner("Calculating..."):
+            time.sleep(2)  # Simulate loading time
+            prediction = random_reg.predict(input_data)
+            
+            # Store prediction and user data in session state
+            st.session_state["prediction"] = prediction[0]
+            st.session_state["user_data"] = input_data
+    
+            st.success(f"🔥 You will burn **{round(prediction[0], 2)} kilocalories** during this exercise!")
 
 
 # **Screen 3: Analysis & Recommendations**
