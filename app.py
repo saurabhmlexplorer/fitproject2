@@ -118,14 +118,7 @@ elif screen == "📊 Analysis & Recommendations":
         prediction = st.session_state["prediction"]
         input_data = st.session_state["user_data"].copy()
 
-        # Find similar results
-        calorie_range = [prediction - 10, prediction + 10]
-        similar_data = exercise_df[
-            (exercise_df["Calories"] >= calorie_range[0]) & (exercise_df["Calories"] <= calorie_range[1])
-        ]
         
-        st.write("### 🔍 Similar Exercise Records:")
-        st.write(similar_data.sample(5))
         
         # Convert 'Gender_male' back to categorical values
         similar_data_display = similar_data.copy()
