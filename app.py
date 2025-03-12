@@ -124,8 +124,17 @@ elif screen == "📊 Analysis & Recommendations":
             (exercise_df["Calories"] >= calorie_range[0]) & (exercise_df["Calories"] <= calorie_range[1])
         ]
         
-        st.write("### 🔍 Similar Past Exercise Records:")
+        st.write("### 🔍 Similar Exercise Records:")
         st.write(similar_data.sample(5))
+        
+        # Convert 'Gender_male' back to categorical values
+        similar_data_display = similar_data.copy()
+        similar_data_display["Gender"] = similar_data_display["Gender_male"].apply(lambda x: "Male" if x == 1 else "Female")
+        similar_data_display.drop(columns=["Gender_male"], inplace=True)  # Remove the encoded column
+        
+        st.write("### 🔍 Similar Past Exercise Records:")
+        st.write(similar_data_display.sample(5))
+
 
         st.write("---")
         st.write("### 📊 General Information:")
